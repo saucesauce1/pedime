@@ -1,80 +1,113 @@
 import { useCallback, useState } from "react";
 import { parseCurrency } from "../utils/parseCurrency";
-import { Box, Text, Image, Button, Badge, Collapse } from "@chakra-ui/react";
+import { Box, Text, Image, Button, Badge, Collapse, VStack, Flex } from "@chakra-ui/react";
 
 const ProductCard = ({ product, setCart }) => {
-	const [show, setShow] = useState(false);
-	const addToCart = product => setCart(cart => cart.concat(product));
+    const [show, setShow] = useState(false);
+    const addToCart = product => setCart(cart => cart.concat(product));
 
-	const handleToggle = useCallback(() => {
-		setShow(!show);
-	}, [show]);
+    const handleToggle = useCallback(() => {
+        setShow(!show);
+    }, [show]);
 
-	return (
-		<Box
-			d="flex"
-			flexDirection="column"
-			justifyContent="center"
-			alignItems="space-between"
-			borderRadius="lg"
-			p={5}
-			bg="white"
-			color="black"
-			_hover={{ boxShadow: "lg" }}
-		>
-			<Box d="flex" flexDirection="column" height="100%">
-				<Image
-					w="100%"
-					h="auto"
-					alt={product.title}
-					loading="lazy"
-					borderRadius="lg"
-					src={product.image}
-					alt={product.image}
-					marginY={4}
-				/>
-				<Text fontSize="2xl">{product.title}</Text>
-				<Badge maxWidth="fit-content" colorScheme="primary" variant="subtle" marginY={1}>
-					{product.category}
-				</Badge>
+    return (
+        <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="space-between"
+            borderRadius="2xl" // Bordes curvos premium
+            p={5}
+            bg="white" 
+            color="#121212"
+            boxShadow="0 4px 14px 0 rgba(224, 212, 236, 0.3)" // Sombra lila muy sutil
+            border="1px solid transparent"
+            transition="all 0.3s ease"
+            _hover={{ 
+                transform: "translateY(-5px)", // La tarjeta "flota" al pasar el mouse
+                boxShadow: "0 12px 24px 0 rgba(224, 212, 236, 0.6)", 
+                borderColor: "#E0D4EC" 
+            }}
+        >
+            <VStack align="start" spacing={4} h="100%">
+                {/* Contenedor de la imagen con efecto zoom */}
+                <Box w="100%" overflow="hidden" borderRadius="xl">
+                    <Image
+                        w="100%"
+                        h="250px" // Alto fijo para que todas las tarjetas midan lo mismo
+                        objectFit="cover" // Evita que las imágenes se deformen
+                        alt={product.title}
+                        loading="lazy"
+                        src={product.image}
+                        transition="transform 0.3s ease"
+                        _hover={{ transform: "scale(1.05)" }} 
+                    />
+                </Box>
 
-				{product.description.length > 130 ? (
-					<>
-						<Collapse marginY={2} startingHeight={60} in={show}>
-							<Text fontSize="sm">{product.description}</Text>
-						</Collapse>
-						<Button
-							backgroundColor="white"
-							justifyContent="flex-end"
-							fontWeight={400}
-							color="gray.500"
-							size="sm"
-							onClick={handleToggle}
-							mt="8px"
-						>
-							Show {show ? "Less" : "More"}
-						</Button>
-					</>
-				) : (
-					<Text fontSize="sm">{product.description}</Text>
-				)}
-			</Box>
+                <VStack align="start" spacing={2} w="100%">
+                    {/* Fila superior: Categoría y Precio */}
+                    <Flex justify="space-between" w="100%" align="center">
+                        <Badge 
+                            bg="#F4F3EF" 
+                            color="gray.600" 
+                            px={3} 
+                            py={1} 
+                            borderRadius="full" 
+                            fontSize="xs"
+                            letterSpacing="wider"
+                        >
+                            {product.category}
+                        </Badge>
+                        <Text fontWeight="bold" fontSize="lg" color="#121212">
+                            {parseCurrency(product.price)}
+                        </Text>
+                    </Flex>
+                    
+                    {/* Título de la prenda */}
+                    <Text fontSize="xl" fontWeight="800" color="#121212" lineHeight="tight">
+                        {product.title}
+                    </Text>
 
-			<Box d="flex" flexDirection="column">
-				<Text fontWeight="bold" fontSize="md" marginY={4}>
-					{parseCurrency(product.price)}
-				</Text>
-				<Button
-					size="sm"
-					onClick={() => addToCart(product)}
-					colorScheme="primary"
-					variant="outline"
-				>
-					Add
-				</Button>
-			</Box>
-		</Box>
-	);
+                    {/* Descripción con tipografía limpia */}
+                    {product.description.length > 100 ? (
+                        <Box w="100%">
+                            <Collapse startingHeight={40} in={show}>
+                                <Text fontSize="sm" color="gray.500" lineHeight="tall">{product.description}</Text>
+                            </Collapse>
+                            <Button
+                                variant="link"
+                                color="#E8C872" // Dorado sutil
+                                size="sm"
+                                onClick={handleToggle}
+                                mt={2}
+                                fontWeight="600"
+                            >
+                                Ver {show ? "menos" : "más"}
+                            </Button>
+                        </Box>
+                    ) : (
+                        <Text fontSize="sm" color="gray.500" lineHeight="tall">{product.description}</Text>
+                    )}
+                </VStack>
+            </VStack>
+
+            {/* Botón premium de acción */}
+            <Button
+                mt={6}
+                w="100%" // Botón de lado a lado
+                borderRadius="full" // Estilo píldora
+                size="lg"
+                fontSize="md"
+                fontWeight="bold"
+                bg="#E0D4EC"
+                color="#121212"
+                transition="all 0.3s ease"
+                _hover={{ backgroundColor: "#F3D8E5", transform: "scale(1.02)" }}
+                onClick={() => addToCart(product)}
+            >
+                Añadir a la bolsa ✦
+            </Button>
+        </Box>
+    );
 };
 
 export default ProductCard;
