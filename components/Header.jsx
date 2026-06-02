@@ -1,4 +1,4 @@
-import { Text, Image, Heading, VStack, HStack, Link, Badge, Box, Divider, Icon } from "@chakra-ui/react";
+import { Text, Image, Heading, VStack, HStack, Stack, Link, Box, Divider, Icon } from "@chakra-ui/react";
 
 const WhatsAppIcon = (props) => (
   <Icon viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -22,7 +22,7 @@ const Header = () => {
                 borderColor="gray.100"
                 position="relative"
             >
-                <VStack spacing={5}>
+                <VStack spacing={{ base: 4, md: 5 }}>
                     <Box mt="-100px">
                         <Image
                             w="150px"
@@ -38,14 +38,15 @@ const Header = () => {
                         />
                     </Box>
 
-                    {/* BLOQUEO DE TRADUCCIÓN PARA LA MARCA PRINCIPAL */}
+                    {/* Ajuste de tamaño de fuente para móviles (4xl) y escritorio (5xl) */}
                     <Heading
                         as={Link}
                         href="/"
                         color="#121212"
-                        fontSize="5xl"
+                        fontSize={{ base: "4xl", md: "5xl" }}
                         fontWeight="bold"
                         letterSpacing="tight"
+                        textAlign="center"
                         _hover={{ textDecoration: "none", color: "#E8C872" }}
                         translate="no"
                         className="notranslate"
@@ -72,37 +73,39 @@ const Header = () => {
                         ))}
                     </HStack>
 
-                    <HStack 
-                        spacing={2} 
+                    {/* Stack cambia automáticamente a columna en móvil y fila en escritorio */}
+                    <Stack 
+                        direction={{ base: "column", md: "row" }}
+                        spacing={{ base: 1, md: 2 }} 
                         mt={2} 
                         color="gray.500" 
-                        fontSize={{ base: "sm", md: "md" }} 
+                        fontSize={{ base: "xs", md: "md" }} 
                         fontWeight="500" 
                         letterSpacing="wide"
+                        align="center"
                     >
                         <Text>Envíos Nacionales Seguros</Text>
-                        <Text aria-hidden="true">•</Text>
+                        <Text aria-hidden="true" display={{ base: "none", md: "block" }}>•</Text>
                         <Text>Sede en CDMX</Text>
-                    </HStack>
+                    </Stack>
                     
-                    <Badge
+                    {/* Caja estilizada para permitir que el texto fluya en móviles */}
+                    <Box
                         bg="#F3D8E5"
                         color="#121212"
-                        px={8}
-                        py={3}
-                        borderRadius="full"
-                        textTransform="none"
-                        fontSize={{ base: "sm", md: "md" }}
+                        px={{ base: 4, md: 8 }}
+                        py={{ base: 2, md: 3 }}
+                        borderRadius={{ base: "xl", md: "full" }}
+                        fontSize={{ base: "xs", md: "md" }}
                         fontWeight="600"
-                        mt={4}
+                        mt={{ base: 2, md: 4 }}
                         letterSpacing="wide"
+                        textAlign="center"
+                        display="inline-block"
+                        w={{ base: "100%", md: "auto" }}
                     >
-                        <HStack spacing={2}>
-                            <Text aria-hidden="true">✦</Text>
-                            <Text>Autenticidad Garantizada — Colección Limitada</Text>
-                            <Text aria-hidden="true">✦</Text>
-                        </HStack>
-                    </Badge>
+                        ✦ Autenticidad Garantizada — Colección Limitada ✦
+                    </Box>
                 </VStack>
             </Box>
 
