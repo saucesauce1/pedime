@@ -4,11 +4,28 @@ import { Box, Text, Image, Button, Badge, Collapse, VStack, Flex } from "@chakra
 
 const ProductCard = ({ product, setCart }) => {
     const [show, setShow] = useState(false);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
     const addToCart = product => setCart(cart => cart.concat(product));
 
     const handleToggle = useCallback(() => {
         setShow(!show);
     }, [show]);
+
+    // Lógica nueva: Separar las imágenes por coma y limpiar los espacios
+    const images = product.image ? product.image.split(',').map(img => img.trim()) : [];
+    const hasMultipleImages = images.length > 1;
+
+    // Funciones para navegar entre fotos
+    const nextImage = (e) => {
+        e.stopPropagation(); // Evita conflictos con otros clics
+        setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    };
+
+    const prevImage = (e) => {
+        e.stopPropagation();
+        setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    };
 
     return (
         <Box
@@ -29,18 +46,86 @@ const ProductCard = ({ product, setCart }) => {
             }}
         >
             <VStack align="start" spacing={4} h="100%">
-                {/* Contenedor de la imagen con efecto zoom */}
-                <Box w="100%" overflow="hidden" borderRadius="xl">
+                {/* Contenedor de la imagen con carrusel (role="group" permite mostrar flechas en hover) */}
+                <Box w="100%" position="relative" overflow="hidden" borderRadius="xl" role="group">
                     <Image
                         w="100%"
                         h="250px" // Alto fijo para que todas las tarjetas midan lo mismo
                         objectFit="cover" // Evita que las imágenes se deformen
                         alt={product.title}
                         loading="lazy"
-                        src={product.image}
+                        src={images[currentImageIndex] || product.image} // Muestra la foto actual
                         transition="transform 0.3s ease"
                         _hover={{ transform: "scale(1.05)" }} 
                     />
+
+                    {/* Controles del carrusel (solo se renderizan si hay > 1 foto) */}
+                    {hasMultipleImages && (
+                        <>
+                            {/* Flecha Izquierda */}
+                            <Box
+                                position="absolute"
+                                top="50%"
+                                left="2"
+                                transform="translateY(-50%)"
+                                bg="whiteAlpha.800"
+                                borderRadius="full"
+                                w="30px"
+                                h="30px"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                cursor="pointer"
+                                opacity={{ base: 1, md: 0 }} // Siempre visible en móvil, oculta en PC
+                                _groupHover={{ opacity: 1 }} // Aparece al pasar el mouse
+                                transition="opacity 0.2s ease"
+                                onClick={prevImage}
+                                boxShadow="sm"
+                                _hover={{ bg: "white" }}
+                            >
+                                <Text fontSize="xl" fontWeight="bold" mt="-2px">‹</Text>
+                            </Box>
+
+                            {/* Flecha Derecha */}
+                            <Box
+                                position="absolute"
+                                top="50%"
+                                right="2"
+                                transform="translateY(-50%)"
+                                bg="whiteAlpha.800"
+                                borderRadius="full"
+                                w="30px"
+                                h="30px"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                cursor="pointer"
+                                opacity={{ base: 1, md: 0 }} 
+                                _groupHover={{ opacity: 1 }}
+                                transition="opacity 0.2s ease"
+                                onClick={nextImage}
+                                boxShadow="sm"
+                                _hover={{ bg: "white" }}
+                            >
+                                <Text fontSize="xl" fontWeight="bold" mt="-2px">›</Text>
+                            </Box>
+
+                            {/* Puntitos indicadores en la parte inferior */}
+                            <Flex position="absolute" bottom="3" w="100%" justify="center" gap={1.5}>
+                                {images.map((_, idx) => (
+                                    <Box
+                                        key={idx}
+                                        w={currentImageIndex === idx ? "6px" : "4px"}
+                                        h={currentImageIndex === idx ? "6px" : "4px"}
+                                        bg={currentImageIndex === idx ? "white" : "whiteAlpha.600"}
+                                        borderRadius="full"
+                                        transition="all 0.2s ease"
+                                        boxShadow="0 1px 2px rgba(0,0,0,0.3)"
+                                    />
+                                ))}
+                            </Flex>
+                        </>
+                    )}
                 </Box>
 
                 <VStack align="start" spacing={2} w="100%">
