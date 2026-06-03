@@ -21,6 +21,7 @@ const Header = () => {
                 border="1px solid"
                 borderColor="gray.100"
                 position="relative"
+                fontFamily="'Montserrat', sans-serif" // <-- Fuente inyectada en todo el bloque
             >
                 <VStack spacing={{ base: 4, md: 5 }}>
                     <Box mt="-100px">
@@ -38,15 +39,15 @@ const Header = () => {
                         />
                     </Box>
 
-                    {/* Ajuste de tamaño de fuente para móviles (4xl) y escritorio (5xl) */}
                     <Heading
                         as={Link}
                         href="/"
                         color="#121212"
                         fontSize={{ base: "4xl", md: "5xl" }}
-                        fontWeight="bold"
+                        fontWeight="800"
                         letterSpacing="tight"
                         textAlign="center"
+                        fontFamily="'Playfair Display', serif" // <-- Título con fuente elegante
                         _hover={{ textDecoration: "none", color: "#E8C872" }}
                         translate="no"
                         className="notranslate"
@@ -73,13 +74,12 @@ const Header = () => {
                         ))}
                     </HStack>
 
-                    {/* Stack cambia automáticamente a columna en móvil y fila en escritorio */}
                     <Stack 
                         direction={{ base: "column", md: "row" }}
                         spacing={{ base: 1, md: 2 }} 
                         mt={2} 
                         color="gray.500" 
-                        fontSize={{ base: "xs", md: "md" }} 
+                        fontSize={{ base: "xs", md: "sm" }} 
                         fontWeight="500" 
                         letterSpacing="wide"
                         align="center"
@@ -89,14 +89,13 @@ const Header = () => {
                         <Text>Sede en CDMX</Text>
                     </Stack>
                     
-                    {/* Caja estilizada para permitir que el texto fluya en móviles */}
                     <Box
                         bg="#F3D8E5"
                         color="#121212"
                         px={{ base: 4, md: 8 }}
                         py={{ base: 2, md: 3 }}
                         borderRadius={{ base: "xl", md: "full" }}
-                        fontSize={{ base: "xs", md: "md" }}
+                        fontSize={{ base: "xs", md: "sm" }}
                         fontWeight="600"
                         mt={{ base: 2, md: 4 }}
                         letterSpacing="wide"
