@@ -50,7 +50,8 @@ const ProductCard = ({ product, setCart }) => {
                     <Image
                         w="100%"
                         h={{ base: "320px", md: "380px" }} // Mucho más grande, es la protagonista
-                        objectFit="cover"
+                        objectFit="contain" // <-- Ajuste para que la foto se vea completa
+                        p={2} // <-- Respiro interno para que no pegue con los bordes
                         alt={product.title}
                         loading="lazy"
                         src={images[currentImageIndex] || product.image}
