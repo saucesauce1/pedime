@@ -20,6 +20,7 @@ const Footer = () => {
             border="1px solid"
             borderColor="gray.100"
             textAlign="center"
+            fontFamily="'Montserrat', sans-serif" // <-- Fuente base inyectada en todo el bloque
         >
             <VStack spacing={6}>
                 {/* Enlaces de políticas */}
@@ -27,7 +28,7 @@ const Footer = () => {
                     <Link _hover={{ color: "#E8C872" }}>Políticas de Devolución</Link>
                     <Text color="gray.300">•</Text>
                     <Link _hover={{ color: "#E8C872" }}>Aviso de Privacidad</Link>
-                    <Text color="gray.300">•</Text>
+                    <Text color="gray.300" display={{ base: "none", md: "block" }}>•</Text>
                     <Link _hover={{ color: "#E8C872" }}>Términos y Condiciones</Link>
                 </HStack>
 
@@ -36,18 +37,35 @@ const Footer = () => {
                 {/* Sección de Pagos */}
                 <VStack spacing={2}>
                     <HStack>
-                        <Text fontSize="sm" fontWeight="800" color="#121212" letterSpacing="wide">
+                        <Text 
+                            fontSize={{ base: "md", md: "lg" }} 
+                            fontWeight="800" 
+                            color="#121212" 
+                            letterSpacing="wide"
+                            fontFamily="'Playfair Display', serif" // <-- Fuente premium para el título
+                        >
                             🛡️ PAGO SEGURO AL CONFIRMAR TU PEDIDO
                         </Text>
                     </HStack>
-                    <Text fontSize="xs" color="gray.500">
+                    <Text fontSize="xs" color="gray.500" fontWeight="500">
                         Manda tu carrito por WhatsApp y elige cómo pagar. Aceptamos todas las formas de pago.
                     </Text>
                 </VStack>
 
                 <HStack spacing={3} flexWrap="wrap" justify="center">
                     {["EFECTIVO", "TRANSFERENCIA", "TARJETAS", "MESES SIN INTERESES"].map((method) => (
-                        <Box key={method} px={4} py={1} border="1px solid" borderColor="gray.200" borderRadius="md" fontSize="xs" fontWeight="600" color="gray.600">
+                        <Box 
+                            key={method} 
+                            px={4} 
+                            py={1.5} 
+                            border="1px solid" 
+                            borderColor="gray.200" 
+                            borderRadius="full" // <-- Bordes más redondeados para seguir el estilo
+                            fontSize="xs" 
+                            fontWeight="600" 
+                            color="gray.600"
+                            letterSpacing="wider"
+                        >
                             {method}
                         </Box>
                     ))}
@@ -55,7 +73,13 @@ const Footer = () => {
 
                 {/* NUEVA SECCIÓN DE REDES SOCIALES */}
                 <VStack spacing={3} mt={6} mb={2}>
-                    <Text fontSize="xs" fontWeight="800" color="gray.400" letterSpacing="0.1em">
+                    <Text 
+                        fontSize="xs" 
+                        fontWeight="800" 
+                        color="gray.400" 
+                        letterSpacing="0.1em"
+                        fontFamily="'Playfair Display', serif" // <-- Toque editorial aquí también
+                    >
                         SÍGUENOS EN NUESTRAS REDES
                     </Text>
                     <Link href="https://www.instagram.com/mystical_sty" isExternal _hover={{ textDecoration: "none" }}>
@@ -76,7 +100,7 @@ const Footer = () => {
                 </VStack>
 
                 {/* Copyright */}
-                <Text fontSize="xs" color="gray.400" mt={4}>
+                <Text fontSize="xs" color="gray.400" mt={4} fontWeight="500">
                     © 2026 Mystical Style. Todos los derechos reservados.
                 </Text>
             </VStack>
