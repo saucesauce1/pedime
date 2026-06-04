@@ -144,15 +144,18 @@ const ProductsGrid = ({ products, setCart }) => {
                                         w="100%"
                                         minW="0"
                                     >
-                                        {/* Separamos la animación del GridItem para que no haya conflictos */}
                                         <motion.div
-                                            initial={{ opacity: 0, y: 40 }} 
-                                            animate={{ opacity: 1, y: 0 }} // <-- Aparece automáticamente al cargar
+                                            // INICIO: Más abajo, invisible y un poco más pequeño
+                                            initial={{ opacity: 0, y: 100, scale: 0.9 }} 
+                                            // ACCIÓN: Se activa SÓLO cuando entra en la pantalla por scroll
+                                            whileInView={{ opacity: 1, y: 0, scale: 1 }} 
+                                            // CONFIGURACIÓN: Se activa cuando asoma el 10% de la tarjeta
+                                            viewport={{ once: true, amount: 0.1 }} 
                                             transition={{ 
-                                                duration: 0.6, 
+                                                duration: 0.7, 
                                                 type: "spring", 
-                                                bounce: 0.3,
-                                                delay: (index % 6) * 0.15 // Efecto cascada
+                                                bounce: 0.4, // Un rebote más notorio
+                                                delay: (index % 6) * 0.15 
                                             }}
                                             style={{ height: "100%" }}
                                         >
