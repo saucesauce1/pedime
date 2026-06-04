@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import {
-    SimpleGrid,
+    Grid,        // <-- Cambiamos SimpleGrid por Grid avanzado
+    GridItem,    // <-- Para controlar el espacio de cada tarjeta
     Box,
     Input,
     InputGroup,
@@ -96,15 +97,21 @@ const ProductsGrid = ({ products, setCart }) => {
                 </Select>
             </Flex>
 
-            {/* Listado de Productos por Categoría */}
+            {/* Listado de Productos por Categoría con Layout Asimétrico */}
             {categories.map(category => (
-                <Box key={category} id={category.replace(/\s/g, "").toLowerCase()}>
+                <Box key={category} id={category.replace(/\s/g, "").toLowerCase()} mb={16}>
                     {!!filteredProducts.filter(product => product.category === category).length && (
-                        <Flex mt={8} mb={6} align="center" gap={3}>
-                            <Heading as="h3" size="lg" color="#121212" fontWeight="bold" letterSpacing="tight">
+                        <Flex mt={8} mb={8} align="center" gap={3}>
+                            <Heading 
+                                as="h3" 
+                                size="xl" 
+                                color="#121212" 
+                                fontWeight="800" 
+                                letterSpacing="tight"
+                                fontFamily="'Playfair Display', serif" // <-- Toque editorial en el título
+                            >
                                 {category}
                             </Heading>
-                            {/* Píldora elegante para el contador de productos */}
                             <Badge 
                                 bg="#E0D4EC" 
                                 color="#121212" 
@@ -118,13 +125,32 @@ const ProductsGrid = ({ products, setCart }) => {
                             </Badge>
                         </Flex>
                     )}
-                    <SimpleGrid columns={[1, 2, 3, 4]} spacing={8}>
+                    
+                    {/* El nuevo Grid Asimétrico (Bento Box) */}
+                    <Grid 
+                        templateColumns={{ base: "1fr", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }} 
+                        gap={{ base: 6, md: 8 }}
+                    >
                         {filteredProducts
                             .filter(product => product.category === category)
-                            .map(product => (
-                                <ProductCard key={product.id || Math.random()} product={product} setCart={setCart} />
-                            ))}
-                    </SimpleGrid>
+                            .map((product, index) => {
+                                // Lógica de asimetría: rompiendo el estándar
+                                const isHero = index === 0; // El primer producto destaca
+                                const isWide = index === 3 || index === 4; // Rompemos la monotonía más adelante
+
+                                return (
+                                    <GridItem 
+                                        key={product.id || index}
+                                        // En celular es 1 col. En PC/Tablet el héroe y los wide toman 2 columnas
+                                        colSpan={{ base: 1, md: isHero ? 2 : 1, lg: isHero || isWide ? 2 : 1 }}
+                                        w="100%"
+                                        transition="all 0.3s ease"
+                                    >
+                                        <ProductCard product={product} setCart={setCart} />
+                                    </GridItem>
+                                );
+                            })}
+                    </Grid>
                 </Box>
             ))}
         </Box>
