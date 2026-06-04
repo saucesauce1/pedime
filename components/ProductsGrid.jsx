@@ -12,6 +12,7 @@ import {
     Badge
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
+import { motion } from "framer-motion"; // <-- Importamos Framer Motion
 import ProductCard from "./ProductCard";
 
 const ProductsGrid = ({ products, setCart }) => {
@@ -97,7 +98,7 @@ const ProductsGrid = ({ products, setCart }) => {
                 </Select>
             </Flex>
 
-            {/* Listado de Productos por Categoría */}
+            {/* Listado de Productos */}
             {categories.map(category => (
                 <Box key={category} id={category.replace(/\s/g, "").toLowerCase()} mb={16}>
                     {!!filteredProducts.filter(product => product.category === category).length && (
@@ -128,7 +129,7 @@ const ProductsGrid = ({ products, setCart }) => {
                     
                     <Grid 
                         templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }} 
-                        gap={{ base: 3, md: 8 }} // <-- Margen reducido en celular para evitar choques
+                        gap={{ base: 3, md: 8 }}
                     >
                         {filteredProducts
                             .filter(product => product.category === category)
@@ -138,11 +139,20 @@ const ProductsGrid = ({ products, setCart }) => {
 
                                 return (
                                     <GridItem 
+                                        as={motion.div} // <-- Convertimos el componente estático a uno animado
+                                        initial={{ opacity: 0, y: 40 }} // Estado inicial (invisible y abajo)
+                                        whileInView={{ opacity: 1, y: 0 }} // Estado al hacer scroll (visible y en su lugar)
+                                        viewport={{ once: true, margin: "-50px" }} // Evita que la animación se repita al subir
+                                        transition={{ 
+                                            duration: 0.6, 
+                                            type: "spring", 
+                                            bounce: 0.3,
+                                            delay: (index % 6) * 0.1 // <-- Crea el efecto de cascada
+                                        }}
                                         key={product.id || index}
                                         colSpan={{ base: isHero ? 2 : 1, md: isHero ? 2 : 1, lg: isHero || isWide ? 2 : 1 }}
                                         w="100%"
-                                        minW="0" // <-- ESTA ES LA CLAVE: Evita que el contenedor se desborde
-                                        transition="all 0.3s ease"
+                                        minW="0"
                                     >
                                         <ProductCard product={product} setCart={setCart} />
                                     </GridItem>
