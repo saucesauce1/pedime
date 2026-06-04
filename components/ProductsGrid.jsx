@@ -12,7 +12,7 @@ import {
     Badge
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
-import { motion } from "framer-motion"; // <-- Importamos Framer Motion
+import { motion } from "framer-motion"; 
 import ProductCard from "./ProductCard";
 
 const ProductsGrid = ({ products, setCart }) => {
@@ -139,22 +139,25 @@ const ProductsGrid = ({ products, setCart }) => {
 
                                 return (
                                     <GridItem 
-                                        as={motion.div} // <-- Convertimos el componente estático a uno animado
-                                        initial={{ opacity: 0, y: 40 }} // Estado inicial (invisible y abajo)
-                                        whileInView={{ opacity: 1, y: 0 }} // Estado al hacer scroll (visible y en su lugar)
-                                        viewport={{ once: true, margin: "-50px" }} // Evita que la animación se repita al subir
-                                        transition={{ 
-                                            duration: 0.6, 
-                                            type: "spring", 
-                                            bounce: 0.3,
-                                            delay: (index % 6) * 0.1 // <-- Crea el efecto de cascada
-                                        }}
                                         key={product.id || index}
                                         colSpan={{ base: isHero ? 2 : 1, md: isHero ? 2 : 1, lg: isHero || isWide ? 2 : 1 }}
                                         w="100%"
                                         minW="0"
                                     >
-                                        <ProductCard product={product} setCart={setCart} />
+                                        {/* Separamos la animación del GridItem para que no haya conflictos */}
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 40 }} 
+                                            animate={{ opacity: 1, y: 0 }} // <-- Aparece automáticamente al cargar
+                                            transition={{ 
+                                                duration: 0.6, 
+                                                type: "spring", 
+                                                bounce: 0.3,
+                                                delay: (index % 6) * 0.15 // Efecto cascada
+                                            }}
+                                            style={{ height: "100%" }}
+                                        >
+                                            <ProductCard product={product} setCart={setCart} />
+                                        </motion.div>
                                     </GridItem>
                                 );
                             })}
