@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
-    Grid,        // <-- Cambiamos SimpleGrid por Grid avanzado
-    GridItem,    // <-- Para controlar el espacio de cada tarjeta
+    Grid,        // <-- Grid avanzado para el layout asimétrico
+    GridItem,    // <-- Control individual de proporciones
     Box,
     Input,
     InputGroup,
@@ -97,7 +97,7 @@ const ProductsGrid = ({ products, setCart }) => {
                 </Select>
             </Flex>
 
-            {/* Listado de Productos por Categoría con Layout Asimétrico */}
+            {/* Listado de Productos por Categoría con Layout Híbrido */}
             {categories.map(category => (
                 <Box key={category} id={category.replace(/\s/g, "").toLowerCase()} mb={16}>
                     {!!filteredProducts.filter(product => product.category === category).length && (
@@ -108,7 +108,7 @@ const ProductsGrid = ({ products, setCart }) => {
                                 color="#121212" 
                                 fontWeight="800" 
                                 letterSpacing="tight"
-                                fontFamily="'Playfair Display', serif" // <-- Toque editorial en el título
+                                fontFamily="'Playfair Display', serif"
                             >
                                 {category}
                             </Heading>
@@ -126,23 +126,23 @@ const ProductsGrid = ({ products, setCart }) => {
                         </Flex>
                     )}
                     
-                    {/* El nuevo Grid Asimétrico (Bento Box) */}
+                    {/* El nuevo Grid Asimétrico (Bento Box adaptado a móvil) */}
                     <Grid 
-                        templateColumns={{ base: "1fr", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }} 
-                        gap={{ base: 6, md: 8 }}
+                        // En móvil forzamos 2 columnas como base para el layout estilo app
+                        templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }} 
+                        gap={{ base: 4, md: 8 }}
                     >
                         {filteredProducts
                             .filter(product => product.category === category)
                             .map((product, index) => {
-                                // Lógica de asimetría: rompiendo el estándar
-                                const isHero = index === 0; // El primer producto destaca
-                                const isWide = index === 3 || index === 4; // Rompemos la monotonía más adelante
+                                const isHero = index === 0; 
+                                const isWide = index === 3 || index === 4; 
 
                                 return (
                                     <GridItem 
                                         key={product.id || index}
-                                        // En celular es 1 col. En PC/Tablet el héroe y los wide toman 2 columnas
-                                        colSpan={{ base: 1, md: isHero ? 2 : 1, lg: isHero || isWide ? 2 : 1 }}
+                                        // El héroe toma 2 columnas (toda la pantalla en móvil), los demás toman 1 (mitad de pantalla)
+                                        colSpan={{ base: isHero ? 2 : 1, md: isHero ? 2 : 1, lg: isHero || isWide ? 2 : 1 }}
                                         w="100%"
                                         transition="all 0.3s ease"
                                     >
