@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { parseCurrency } from "../utils/parseCurrency";
 import { Box, Text, Image, Button, Badge, Collapse, VStack, Flex } from "@chakra-ui/react";
+import { motion } from "framer-motion"; // <-- Importamos Framer Motion
 
 const ProductCard = ({ product, setCart }) => {
     const [show, setShow] = useState(false);
@@ -27,19 +28,20 @@ const ProductCard = ({ product, setCart }) => {
 
     return (
         <Box
+            as={motion.div} // <-- Inyectamos físicas a la tarjeta
+            whileHover={{ y: -8 }} // Movimiento hacia arriba al interactuar
+            transition={{ type: "spring", stiffness: 300, damping: 20 }} // <-- Física de resorte (Spring Physics)
             display="flex"
             flexDirection="column"
             justifyContent="space-between"
             borderRadius="2xl"
-            p={{ base: 3, md: 4 }} // <-- Menos relleno interno en celular
+            p={{ base: 3, md: 4 }}
             bg="white" 
             color="#121212"
             boxShadow="0 4px 14px 0 rgba(224, 212, 236, 0.3)"
             border="1px solid transparent"
-            transition="all 0.3s ease"
             fontFamily="'Montserrat', sans-serif"
             _hover={{ 
-                transform: "translateY(-5px)",
                 boxShadow: "0 12px 24px 0 rgba(224, 212, 236, 0.6)", 
                 borderColor: "#E0D4EC" 
             }}
@@ -49,7 +51,7 @@ const ProductCard = ({ product, setCart }) => {
                 <Box w="100%" position="relative" overflow="hidden" borderRadius="xl" role="group">
                     <Image
                         w="100%"
-                        h={{ base: "200px", md: "380px" }} // <-- Altura de imagen adaptada para que no quede estirada en móvil
+                        h={{ base: "200px", md: "380px" }} 
                         objectFit="contain"
                         p={2}
                         alt={product.title}
@@ -91,7 +93,7 @@ const ProductCard = ({ product, setCart }) => {
                     </Text>
 
                     {product.description.length > 100 ? (
-                        <Box w="100%" display={{ base: "none", md: "block" }}> {/* Ocultamos la descripción larga en móvil para que quede limpio */}
+                        <Box w="100%" display={{ base: "none", md: "block" }}>
                             <Collapse startingHeight={38} in={show}>
                                 <Text fontSize="xs" color="gray.500" lineHeight="tall">{product.description}</Text>
                             </Collapse>
@@ -109,13 +111,13 @@ const ProductCard = ({ product, setCart }) => {
                 mt={4} 
                 w="100%" 
                 borderRadius="full" 
-                size={{ base: "sm", md: "md" }} // <-- Botón más pequeño en móvil
-                fontSize={{ base: "10px", md: "sm" }} // <-- Letra más pequeña en móvil para que no empuje la caja
+                size={{ base: "sm", md: "md" }} 
+                fontSize={{ base: "10px", md: "sm" }} 
                 fontWeight="600"
                 bg="#E0D4EC"
                 color="#121212"
                 transition="all 0.3s ease"
-                whiteSpace="normal" // <-- Permite al texto acomodarse en dos líneas si es necesario
+                whiteSpace="normal" 
                 height="auto"
                 py={2}
                 _hover={{ backgroundColor: "#F3D8E5", transform: "scale(1.02)" }}
