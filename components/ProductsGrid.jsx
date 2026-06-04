@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
-    Grid,        // <-- Grid avanzado para el layout asimétrico
-    GridItem,    // <-- Control individual de proporciones
+    Grid,
+    GridItem,
     Box,
     Input,
     InputGroup,
@@ -39,7 +39,7 @@ const ProductsGrid = ({ products, setCart }) => {
 
     return (
         <Box w="100%">
-            {/* Barra de Búsqueda y Filtros con diseño premium */}
+            {/* Barra de Búsqueda y Filtros */}
             <Flex 
                 direction={{ base: "column", md: "row" }} 
                 gap={4} 
@@ -97,7 +97,7 @@ const ProductsGrid = ({ products, setCart }) => {
                 </Select>
             </Flex>
 
-            {/* Listado de Productos por Categoría con Layout Híbrido */}
+            {/* Listado de Productos por Categoría */}
             {categories.map(category => (
                 <Box key={category} id={category.replace(/\s/g, "").toLowerCase()} mb={16}>
                     {!!filteredProducts.filter(product => product.category === category).length && (
@@ -126,11 +126,9 @@ const ProductsGrid = ({ products, setCart }) => {
                         </Flex>
                     )}
                     
-                    {/* El nuevo Grid Asimétrico (Bento Box adaptado a móvil) */}
                     <Grid 
-                        // En móvil forzamos 2 columnas como base para el layout estilo app
                         templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }} 
-                        gap={{ base: 4, md: 8 }}
+                        gap={{ base: 3, md: 8 }} // <-- Margen reducido en celular para evitar choques
                     >
                         {filteredProducts
                             .filter(product => product.category === category)
@@ -141,9 +139,9 @@ const ProductsGrid = ({ products, setCart }) => {
                                 return (
                                     <GridItem 
                                         key={product.id || index}
-                                        // El héroe toma 2 columnas (toda la pantalla en móvil), los demás toman 1 (mitad de pantalla)
                                         colSpan={{ base: isHero ? 2 : 1, md: isHero ? 2 : 1, lg: isHero || isWide ? 2 : 1 }}
                                         w="100%"
+                                        minW="0" // <-- ESTA ES LA CLAVE: Evita que el contenedor se desborde
                                         transition="all 0.3s ease"
                                     >
                                         <ProductCard product={product} setCart={setCart} />
