@@ -12,7 +12,6 @@ import {
     Badge
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
-import { motion } from "framer-motion"; 
 import ProductCard from "./ProductCard";
 
 const ProductsGrid = ({ products, setCart }) => {
@@ -129,7 +128,7 @@ const ProductsGrid = ({ products, setCart }) => {
                     
                     <Grid 
                         templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }} 
-                        gap={{ base: 3, md: 8 }}
+                        gap={{ base: 3, md: 8 }} 
                     >
                         {filteredProducts
                             .filter(product => product.category === category)
@@ -142,23 +141,10 @@ const ProductsGrid = ({ products, setCart }) => {
                                         key={product.id || index}
                                         colSpan={{ base: isHero ? 2 : 1, md: isHero ? 2 : 1, lg: isHero || isWide ? 2 : 1 }}
                                         w="100%"
-                                        minW="0"
+                                        minW="0" 
+                                        transition="all 0.3s ease"
                                     >
-                                        <Box
-                                            as={motion.div}
-                                            initial={{ opacity: 0, y: 50 }} 
-                                            whileInView={{ opacity: 1, y: 0 }} 
-                                            viewport={{ once: true, margin: "50px" }} // Detecta la caja antes de que entre a la vista
-                                            transition={{ 
-                                                duration: 0.6, 
-                                                type: "spring", 
-                                                bounce: 0.3,
-                                                delay: (index % 6) * 0.1 
-                                            }}
-                                            h="100%"
-                                        >
-                                            <ProductCard product={product} setCart={setCart} />
-                                        </Box>
+                                        <ProductCard product={product} setCart={setCart} />
                                     </GridItem>
                                 );
                             })}
