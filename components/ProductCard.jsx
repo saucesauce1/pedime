@@ -150,13 +150,14 @@ const ProductCard = ({ product, setCart }) => {
                 </Button>
             </Box>
 
-            <Modal isOpen={isOpen} onClose={onClose} size={{ base: "md", md: "4xl" }} isCentered>
+            <Modal isOpen={isOpen} onClose={onClose} isCentered>
                 <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(8px)" />
                 <ModalContent 
                     bg="white" 
                     borderRadius="2xl" 
                     overflow="hidden" 
-                    mx={{ base: 4, md: 0 }} 
+                    w={{ base: "90%", md: "85%", lg: "900px" }} 
+                    maxW="95%"
                     boxShadow="0 25px 50px -12px rgba(0, 0, 0, 0.5)"
                 >
                     <ModalCloseButton 
@@ -183,7 +184,7 @@ const ProductCard = ({ product, setCart }) => {
                                     src={images[currentImageIndex] || product.image}
                                     alt={product.title}
                                     objectFit="contain"
-                                    maxH={{ base: "40vh", md: "60vh" }}
+                                    maxH={{ base: "40vh", md: "50vh" }}
                                 />
                             </Box>
                             
