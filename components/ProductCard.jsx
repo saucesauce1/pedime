@@ -150,8 +150,7 @@ const ProductCard = ({ product, setCart }) => {
                 </Button>
             </Box>
 
-            {/* Nueva "Vista Rápida" Premium */}
-            <Modal isOpen={isOpen} onClose={onClose} size={{ base: "xl", md: "3xl" }} isCentered>
+            <Modal isOpen={isOpen} onClose={onClose} size={{ base: "md", md: "4xl" }} isCentered>
                 <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(8px)" />
                 <ModalContent 
                     bg="white" 
@@ -161,37 +160,75 @@ const ProductCard = ({ product, setCart }) => {
                     boxShadow="0 25px 50px -12px rgba(0, 0, 0, 0.5)"
                 >
                     <ModalCloseButton 
-                        color="gray.500" 
+                        color={{ base: "gray.500", md: "gray.800" }} 
                         size="md" 
                         top={3} 
                         right={3} 
                         bg="whiteAlpha.800" 
                         borderRadius="full" 
-                        _hover={{ bg: "gray.100", color: "#121212" }} 
+                        _hover={{ bg: "gray.200", color: "#121212" }} 
                         zIndex={2}
                     />
-                    <ModalBody p={0} position="relative" fontFamily="'Montserrat', sans-serif">
-                        {/* Zona de Imagen con ciclorama virtual */}
-                        <Box p={{ base: 6, md: 10 }} bg="#F4F3EF" display="flex" justifyContent="center" alignItems="center">
-                            <Image
-                                src={images[currentImageIndex] || product.image}
-                                alt={product.title}
-                                objectFit="contain"
-                                maxH={{ base: "40vh", md: "60vh" }}
-                            />
-                        </Box>
-                        {/* Zona de Información */}
-                        <VStack align="start" p={{ base: 5, md: 6 }} spacing={2} bg="white">
-                            <Badge bg="#E0D4EC" color="#121212" px={3} py={1} borderRadius="full" fontSize="2xs" letterSpacing="wider">
-                                {product.category}
-                            </Badge>
-                            <Text fontSize={{ base: "xl", md: "2xl" }} fontWeight="800" color="#121212" fontFamily="'Playfair Display', serif" lineHeight="tight">
-                                {product.title}
-                            </Text>
-                            <Text fontWeight="600" fontSize={{ base: "lg", md: "xl" }} color="gray.600">
-                                {parseCurrency(product.price)}
-                            </Text>
-                        </VStack>
+                    <ModalBody p={0} fontFamily="'Montserrat', sans-serif">
+                        <Flex direction={{ base: "column", md: "row" }}>
+                            <Box 
+                                w={{ base: "100%", md: "50%" }} 
+                                bg="#F4F3EF" 
+                                display="flex" 
+                                justifyContent="center" 
+                                alignItems="center"
+                                p={{ base: 6, md: 10 }}
+                            >
+                                <Image
+                                    src={images[currentImageIndex] || product.image}
+                                    alt={product.title}
+                                    objectFit="contain"
+                                    maxH={{ base: "40vh", md: "60vh" }}
+                                />
+                            </Box>
+                            
+                            <VStack 
+                                w={{ base: "100%", md: "50%" }} 
+                                align="start" 
+                                justify="center"
+                                p={{ base: 5, md: 8, lg: 10 }} 
+                                spacing={4} 
+                                bg="white"
+                            >
+                                <Badge bg="#E0D4EC" color="#121212" px={3} py={1} borderRadius="full" fontSize="xs" letterSpacing="wider">
+                                    {product.category}
+                                </Badge>
+                                <Text fontSize={{ base: "xl", md: "3xl" }} fontWeight="800" color="#121212" fontFamily="'Playfair Display', serif" lineHeight="tight">
+                                    {product.title}
+                                </Text>
+                                <Text fontWeight="600" fontSize={{ base: "lg", md: "2xl" }} color="gray.600">
+                                    {parseCurrency(product.price)}
+                                </Text>
+                                
+                                <Text fontSize="sm" color="gray.500" mt={2} noOfLines={4}>
+                                    {product.description}
+                                </Text>
+
+                                <Button
+                                    mt={4} 
+                                    w="100%" 
+                                    borderRadius="full" 
+                                    size="lg" 
+                                    fontSize="sm" 
+                                    fontWeight="600"
+                                    bg="#121212"
+                                    color="white"
+                                    transition="all 0.3s ease"
+                                    _hover={{ backgroundColor: "#333333", transform: "scale(1.02)" }}
+                                    onClick={() => {
+                                        addToCart(product);
+                                        onClose();
+                                    }}
+                                >
+                                    Añadir a la bolsa ✦
+                                </Button>
+                            </VStack>
+                        </Flex>
                     </ModalBody>
                 </ModalContent>
             </Modal>
