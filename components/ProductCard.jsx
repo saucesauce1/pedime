@@ -1,11 +1,26 @@
 import { useCallback, useState } from "react";
 import { parseCurrency } from "../utils/parseCurrency";
-import { Box, Text, Image, Button, Badge, Collapse, VStack, Flex } from "@chakra-ui/react";
-import { motion } from "framer-motion"; // <-- Importamos Framer Motion
+import { 
+    Box, 
+    Text, 
+    Image, 
+    Button, 
+    Badge, 
+    Collapse, 
+    VStack, 
+    Flex,
+    Modal,          // <-- Importamos componentes para la ventana emergente
+    ModalOverlay,
+    ModalContent,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure
+} from "@chakra-ui/react";
 
 const ProductCard = ({ product, setCart }) => {
     const [show, setShow] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const { isOpen, onOpen, onClose } = useDisclosure(); // <-- Controladores para abrir/cerrar la imagen
 
     const addToCart = product => setCart(cart => cart.concat(product));
 
@@ -27,105 +42,131 @@ const ProductCard = ({ product, setCart }) => {
     };
 
     return (
-        <Box
-            as={motion.div} // <-- Inyectamos físicas a la tarjeta
-            whileHover={{ y: -8 }} // Movimiento hacia arriba al interactuar
-            transition={{ type: "spring", stiffness: 300, damping: 20 }} // <-- Física de resorte (Spring Physics)
-            display="flex"
-            flexDirection="column"
-            justifyContent="space-between"
-            borderRadius="2xl"
-            p={{ base: 3, md: 4 }}
-            bg="white" 
-            color="#121212"
-            boxShadow="0 4px 14px 0 rgba(224, 212, 236, 0.3)"
-            border="1px solid transparent"
-            fontFamily="'Montserrat', sans-serif"
-            _hover={{ 
-                boxShadow: "0 12px 24px 0 rgba(224, 212, 236, 0.6)", 
-                borderColor: "#E0D4EC" 
-            }}
-            h="100%"
-        >
-            <VStack align="start" spacing={3} h="100%" w="100%">
-                <Box w="100%" position="relative" overflow="hidden" borderRadius="xl" role="group">
-                    <Image
-                        w="100%"
-                        h={{ base: "200px", md: "380px" }} 
-                        objectFit="contain"
-                        p={2}
-                        alt={product.title}
-                        loading="lazy"
-                        src={images[currentImageIndex] || product.image}
-                        transition="transform 0.3s ease"
-                        _hover={{ transform: "scale(1.05)" }} 
-                    />
-
-                    {hasMultipleImages && (
-                        <>
-                            <Box position="absolute" top="50%" left="2" transform="translateY(-50%)" bg="whiteAlpha.800" borderRadius="full" w="30px" h="30px" display="flex" alignItems="center" justifyContent="center" cursor="pointer" opacity={{ base: 1, md: 0 }} _groupHover={{ opacity: 1 }} transition="opacity 0.2s ease" onClick={prevImage} boxShadow="sm" _hover={{ bg: "white" }}>
-                                <Text fontSize="xl" fontWeight="bold" mt="-2px">‹</Text>
-                            </Box>
-                            <Box position="absolute" top="50%" right="2" transform="translateY(-50%)" bg="whiteAlpha.800" borderRadius="full" w="30px" h="30px" display="flex" alignItems="center" justifyContent="center" cursor="pointer" opacity={{ base: 1, md: 0 }} _groupHover={{ opacity: 1 }} transition="opacity 0.2s ease" onClick={nextImage} boxShadow="sm" _hover={{ bg: "white" }}>
-                                <Text fontSize="xl" fontWeight="bold" mt="-2px">›</Text>
-                            </Box>
-                            <Flex position="absolute" bottom="3" w="100%" justify="center" gap={1.5}>
-                                {images.map((_, idx) => (
-                                    <Box key={idx} w={currentImageIndex === idx ? "6px" : "4px"} h={currentImageIndex === idx ? "6px" : "4px"} bg={currentImageIndex === idx ? "white" : "whiteAlpha.600"} borderRadius="full" transition="all 0.2s ease" boxShadow="0 1px 2px rgba(0,0,0,0.3)" />
-                                ))}
-                            </Flex>
-                        </>
-                    )}
-                </Box>
-
-                <VStack align="start" spacing={1} w="100%">
-                    <Flex justify="space-between" w="100%" align="center" mt={1} wrap="wrap" gap={1}>
-                        <Badge bg="#F4F3EF" color="gray.600" px={2} py={0.5} borderRadius="full" fontSize={{ base: "10px", md: "2xs" }} letterSpacing="wider">
-                            {product.category}
-                        </Badge>
-                        <Text fontWeight="600" fontSize={{ base: "xs", md: "sm" }} color="#121212">
-                            {parseCurrency(product.price)}
-                        </Text>
-                    </Flex>
-                    
-                    <Text fontSize={{ base: "sm", md: "lg" }} fontWeight="700" color="#121212" lineHeight="tight" fontFamily="'Playfair Display', serif" noOfLines={2}>
-                        {product.title}
-                    </Text>
-
-                    {product.description.length > 100 ? (
-                        <Box w="100%" display={{ base: "none", md: "block" }}>
-                            <Collapse startingHeight={38} in={show}>
-                                <Text fontSize="xs" color="gray.500" lineHeight="tall">{product.description}</Text>
-                            </Collapse>
-                            <Button variant="link" color="#E8C872" size="xs" onClick={handleToggle} mt={1} fontWeight="600">
-                                Ver {show ? "menos" : "más"}
-                            </Button>
-                        </Box>
-                    ) : (
-                        <Text fontSize={{ base: "10px", md: "xs" }} color="gray.500" lineHeight="tall" display={{ base: "none", md: "block" }}>{product.description}</Text>
-                    )}
-                </VStack>
-            </VStack>
-
-            <Button
-                mt={4} 
-                w="100%" 
-                borderRadius="full" 
-                size={{ base: "sm", md: "md" }} 
-                fontSize={{ base: "10px", md: "sm" }} 
-                fontWeight="600"
-                bg="#E0D4EC"
+        <>
+            <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="space-between"
+                borderRadius="2xl"
+                p={{ base: 3, md: 4 }}
+                bg="white" 
                 color="#121212"
+                boxShadow="0 4px 14px 0 rgba(224, 212, 236, 0.3)"
+                border="1px solid transparent"
                 transition="all 0.3s ease"
-                whiteSpace="normal" 
-                height="auto"
-                py={2}
-                _hover={{ backgroundColor: "#F3D8E5", transform: "scale(1.02)" }}
-                onClick={() => addToCart(product)}
+                fontFamily="'Montserrat', sans-serif"
+                _hover={{ 
+                    transform: "translateY(-5px)",
+                    boxShadow: "0 12px 24px 0 rgba(224, 212, 236, 0.6)", 
+                    borderColor: "#E0D4EC" 
+                }}
+                h="100%"
             >
-                Añadir a la bolsa ✦
-            </Button>
-        </Box>
+                <VStack align="start" spacing={3} h="100%" w="100%">
+                    <Box 
+                        w="100%" 
+                        position="relative" 
+                        overflow="hidden" 
+                        borderRadius="xl" 
+                        role="group"
+                        cursor="zoom-in" // <-- Cambiamos el cursor para invitar a hacer clic
+                        onClick={onOpen} // <-- Abrir la imagen en grande al hacer clic
+                    >
+                        <Image
+                            w="100%"
+                            h={{ base: "200px", md: "380px" }}
+                            objectFit="contain"
+                            p={2}
+                            alt={product.title}
+                            loading="lazy"
+                            src={images[currentImageIndex] || product.image}
+                            transition="transform 0.3s ease"
+                            _hover={{ transform: "scale(1.05)" }} 
+                        />
+
+                        {hasMultipleImages && (
+                            <>
+                                <Box position="absolute" top="50%" left="2" transform="translateY(-50%)" bg="whiteAlpha.800" borderRadius="full" w="30px" h="30px" display="flex" alignItems="center" justifyContent="center" cursor="pointer" opacity={{ base: 1, md: 0 }} _groupHover={{ opacity: 1 }} transition="opacity 0.2s ease" onClick={prevImage} boxShadow="sm" _hover={{ bg: "white" }}>
+                                    <Text fontSize="xl" fontWeight="bold" mt="-2px">‹</Text>
+                                </Box>
+                                <Box position="absolute" top="50%" right="2" transform="translateY(-50%)" bg="whiteAlpha.800" borderRadius="full" w="30px" h="30px" display="flex" alignItems="center" justifyContent="center" cursor="pointer" opacity={{ base: 1, md: 0 }} _groupHover={{ opacity: 1 }} transition="opacity 0.2s ease" onClick={nextImage} boxShadow="sm" _hover={{ bg: "white" }}>
+                                    <Text fontSize="xl" fontWeight="bold" mt="-2px">›</Text>
+                                </Box>
+                                <Flex position="absolute" bottom="3" w="100%" justify="center" gap={1.5}>
+                                    {images.map((_, idx) => (
+                                        <Box key={idx} w={currentImageIndex === idx ? "6px" : "4px"} h={currentImageIndex === idx ? "6px" : "4px"} bg={currentImageIndex === idx ? "white" : "whiteAlpha.600"} borderRadius="full" transition="all 0.2s ease" boxShadow="0 1px 2px rgba(0,0,0,0.3)" />
+                                    ))}
+                                </Flex>
+                            </>
+                        )}
+                    </Box>
+
+                    <VStack align="start" spacing={1} w="100%">
+                        <Flex justify="space-between" w="100%" align="center" mt={1} wrap="wrap" gap={1}>
+                            <Badge bg="#F4F3EF" color="gray.600" px={2} py={0.5} borderRadius="full" fontSize={{ base: "10px", md: "2xs" }} letterSpacing="wider">
+                                {product.category}
+                            </Badge>
+                            <Text fontWeight="600" fontSize={{ base: "xs", md: "sm" }} color="#121212">
+                                {parseCurrency(product.price)}
+                            </Text>
+                        </Flex>
+                        
+                        <Text fontSize={{ base: "sm", md: "lg" }} fontWeight="700" color="#121212" lineHeight="tight" fontFamily="'Playfair Display', serif" noOfLines={2}>
+                            {product.title}
+                        </Text>
+
+                        {product.description.length > 100 ? (
+                            <Box w="100%" display={{ base: "none", md: "block" }}>
+                                <Collapse startingHeight={38} in={show}>
+                                    <Text fontSize="xs" color="gray.500" lineHeight="tall">{product.description}</Text>
+                                </Collapse>
+                                <Button variant="link" color="#E8C872" size="xs" onClick={handleToggle} mt={1} fontWeight="600">
+                                    Ver {show ? "menos" : "más"}
+                                </Button>
+                            </Box>
+                        ) : (
+                            <Text fontSize={{ base: "10px", md: "xs" }} color="gray.500" lineHeight="tall" display={{ base: "none", md: "block" }}>{product.description}</Text>
+                        )}
+                    </VStack>
+                </VStack>
+
+                <Button
+                    mt={4} 
+                    w="100%" 
+                    borderRadius="full" 
+                    size={{ base: "sm", md: "md" }} 
+                    fontSize={{ base: "10px", md: "sm" }} 
+                    fontWeight="600"
+                    bg="#E0D4EC"
+                    color="#121212"
+                    transition="all 0.3s ease"
+                    whiteSpace="normal" 
+                    height="auto"
+                    py={2}
+                    _hover={{ backgroundColor: "#F3D8E5", transform: "scale(1.02)" }}
+                    onClick={() => addToCart(product)}
+                >
+                    Añadir a la bolsa ✦
+                </Button>
+            </Box>
+
+            {/* Ventana Emergente (Modal) para ver la imagen en grande */}
+            <Modal isOpen={isOpen} onClose={onClose} size="4xl" isCentered>
+                <ModalOverlay bg="blackAlpha.800" backdropFilter="blur(10px)" />
+                <ModalContent bg="transparent" boxShadow="none">
+                    <ModalCloseButton color="white" size="lg" top={-10} right={0} _hover={{ bg: "transparent", color: "#E8C872" }} />
+                    <ModalBody p={0} display="flex" justifyContent="center">
+                        <Image
+                            src={images[currentImageIndex] || product.image}
+                            alt={product.title}
+                            objectFit="contain"
+                            maxH="85vh" // <-- Evita que la imagen sea más alta que la pantalla
+                            borderRadius="xl"
+                        />
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+        </>
     );
 };
 
