@@ -9,7 +9,7 @@ import {
     Collapse, 
     VStack, 
     Flex,
-    Modal,          // <-- Importamos componentes para la ventana emergente
+    Modal,          
     ModalOverlay,
     ModalContent,
     ModalBody,
@@ -20,7 +20,7 @@ import {
 const ProductCard = ({ product, setCart }) => {
     const [show, setShow] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const { isOpen, onOpen, onClose } = useDisclosure(); // <-- Controladores para abrir/cerrar la imagen
+    const { isOpen, onOpen, onClose } = useDisclosure(); 
 
     const addToCart = product => setCart(cart => cart.concat(product));
 
@@ -69,8 +69,8 @@ const ProductCard = ({ product, setCart }) => {
                         overflow="hidden" 
                         borderRadius="xl" 
                         role="group"
-                        cursor="zoom-in" // <-- Cambiamos el cursor para invitar a hacer clic
-                        onClick={onOpen} // <-- Abrir la imagen en grande al hacer clic
+                        cursor="zoom-in" 
+                        onClick={onOpen} 
                     >
                         <Image
                             w="100%"
@@ -150,19 +150,48 @@ const ProductCard = ({ product, setCart }) => {
                 </Button>
             </Box>
 
-            {/* Ventana Emergente (Modal) para ver la imagen en grande */}
-            <Modal isOpen={isOpen} onClose={onClose} size="4xl" isCentered>
-                <ModalOverlay bg="blackAlpha.800" backdropFilter="blur(10px)" />
-                <ModalContent bg="transparent" boxShadow="none">
-                    <ModalCloseButton color="white" size="lg" top={-10} right={0} _hover={{ bg: "transparent", color: "#E8C872" }} />
-                    <ModalBody p={0} display="flex" justifyContent="center">
-                        <Image
-                            src={images[currentImageIndex] || product.image}
-                            alt={product.title}
-                            objectFit="contain"
-                            maxH="85vh" // <-- Evita que la imagen sea más alta que la pantalla
-                            borderRadius="xl"
-                        />
+            {/* Nueva "Vista Rápida" Premium */}
+            <Modal isOpen={isOpen} onClose={onClose} size={{ base: "xl", md: "3xl" }} isCentered>
+                <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(8px)" />
+                <ModalContent 
+                    bg="white" 
+                    borderRadius="2xl" 
+                    overflow="hidden" 
+                    mx={{ base: 4, md: 0 }} 
+                    boxShadow="0 25px 50px -12px rgba(0, 0, 0, 0.5)"
+                >
+                    <ModalCloseButton 
+                        color="gray.500" 
+                        size="md" 
+                        top={3} 
+                        right={3} 
+                        bg="whiteAlpha.800" 
+                        borderRadius="full" 
+                        _hover={{ bg: "gray.100", color: "#121212" }} 
+                        zIndex={2}
+                    />
+                    <ModalBody p={0} position="relative" fontFamily="'Montserrat', sans-serif">
+                        {/* Zona de Imagen con ciclorama virtual */}
+                        <Box p={{ base: 6, md: 10 }} bg="#F4F3EF" display="flex" justifyContent="center" alignItems="center">
+                            <Image
+                                src={images[currentImageIndex] || product.image}
+                                alt={product.title}
+                                objectFit="contain"
+                                maxH={{ base: "40vh", md: "60vh" }}
+                            />
+                        </Box>
+                        {/* Zona de Información */}
+                        <VStack align="start" p={{ base: 5, md: 6 }} spacing={2} bg="white">
+                            <Badge bg="#E0D4EC" color="#121212" px={3} py={1} borderRadius="full" fontSize="2xs" letterSpacing="wider">
+                                {product.category}
+                            </Badge>
+                            <Text fontSize={{ base: "xl", md: "2xl" }} fontWeight="800" color="#121212" fontFamily="'Playfair Display', serif" lineHeight="tight">
+                                {product.title}
+                            </Text>
+                            <Text fontWeight="600" fontSize={{ base: "lg", md: "xl" }} color="gray.600">
+                                {parseCurrency(product.price)}
+                            </Text>
+                        </VStack>
                     </ModalBody>
                 </ModalContent>
             </Modal>
