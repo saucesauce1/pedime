@@ -57,8 +57,8 @@ const Header = () => {
 
                     <Divider borderColor="#E0D4EC" borderWidth="1px" w="60%" opacity={0.8} />
 
-                    <HStack flexWrap="wrap" justify="center" spacing={{ base: 3, md: 6 }}>
-                        {["Guess", "Adidas", "True Religion", "DKNY"].map((brand) => (
+                    <HStack flexWrap="wrap" justify="center" spacing={{ base: 2, md: 5 }} rowGap={2}>
+                        {["Calvin Klein", "Michael Kors", "Tommy Hilfiger", "Karl Lagerfeld", "Guess", "True Religion"].map((brand) => (
                             <Text
                                 key={brand}
                                 fontSize={{ base: "xs", md: "sm" }}
