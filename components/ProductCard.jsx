@@ -15,27 +15,37 @@ import {
     ModalBody,
     ModalCloseButton,
     useDisclosure,
-    useToast // <-- Importamos el sistema de notificaciones
+    useToast
 } from "@chakra-ui/react";
 
 const ProductCard = ({ product, setCart }) => {
     const [show, setShow] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const { isOpen, onOpen, onClose } = useDisclosure(); 
-    const toast = useToast(); // <-- Inicializamos el Toast
+    const toast = useToast();
+
+    // 1. BLINDAJE DE DATOS: Prevenimos que falten campos en tu base de datos
+    const title = product.title || product.Producto || "Artículo de Boutique";
+    const category = product.category || "Colección";
+    const price = product.price || 0;
+    const description = product.description || "Pieza exclusiva de nuestra colección. Contáctanos para más detalles.";
+    
+    // Si no hay imagen, Chakra UI manejará el espacio vacío sin crashear
+    const images = product.image ? product.image.split(',').map(img => img.trim()) : [];
+    const hasMultipleImages = images.length > 1;
 
     const addToCart = product => {
         setCart(cart => cart.concat(product));
         
-        // <-- Configuración de la alerta visual elegante
+        // 2. ALERTA VISUAL ELEGANTE
         toast({
             title: "Añadido a la bolsa ✦",
-            description: `${product.title} se ha guardado en tu pedido.`,
+            description: `${title} se ha guardado en tu pedido.`,
             status: "success",
             duration: 3000,
             isClosable: true,
             position: "top",
-            variant: "subtle", // Un diseño suave y moderno
+            variant: "subtle", 
             colorScheme: "green"
         });
     };
@@ -43,9 +53,6 @@ const ProductCard = ({ product, setCart }) => {
     const handleToggle = useCallback(() => {
         setShow(!show);
     }, [show]);
-
-    const images = product.image ? product.image.split(',').map(img => img.trim()) : [];
-    const hasMultipleImages = images.length > 1;
 
     const nextImage = (e) => {
         e.stopPropagation();
@@ -93,9 +100,9 @@ const ProductCard = ({ product, setCart }) => {
                             h={{ base: "200px", md: "380px" }}
                             objectFit="contain"
                             p={2}
-                            alt={product.title}
+                            alt={title}
                             loading="lazy"
-                            src={images[currentImageIndex] || product.image}
+                            src={images[currentImageIndex] || product.image || "/placeholder.png"} // Fallback por si no hay foto
                             transition="transform 0.3s ease"
                             _hover={{ transform: "scale(1.05)" }} 
                         />
@@ -120,28 +127,29 @@ const ProductCard = ({ product, setCart }) => {
                     <VStack align="start" spacing={1} w="100%">
                         <Flex justify="space-between" w="100%" align="center" mt={1} wrap="wrap" gap={1}>
                             <Badge bg="#F4F3EF" color="gray.600" px={2} py={0.5} borderRadius="full" fontSize={{ base: "10px", md: "2xs" }} letterSpacing="wider">
-                                {product.category}
+                                {category}
                             </Badge>
                             <Text fontWeight="600" fontSize={{ base: "xs", md: "sm" }} color="#121212">
-                                {parseCurrency(product.price)}
+                                {parseCurrency(price)}
                             </Text>
                         </Flex>
                         
                         <Text fontSize={{ base: "sm", md: "lg" }} fontWeight="700" color="#121212" lineHeight="tight" fontFamily="'Playfair Display', serif" noOfLines={2}>
-                            {product.title}
+                            {title}
                         </Text>
 
-                        {product.description?.length > 100 ? (
+                        {/* Usamos nuestra variable segura 'description' en lugar de 'product.description' */}
+                        {description.length > 100 ? (
                             <Box w="100%" display={{ base: "none", md: "block" }}>
                                 <Collapse startingHeight={38} in={show}>
-                                    <Text fontSize="xs" color="gray.500" lineHeight="tall">{product.description}</Text>
+                                    <Text fontSize="xs" color="gray.500" lineHeight="tall">{description}</Text>
                                 </Collapse>
                                 <Button variant="link" color="#E8C872" size="xs" onClick={handleToggle} mt={1} fontWeight="600">
                                     Ver {show ? "menos" : "más"}
                                 </Button>
                             </Box>
                         ) : (
-                            <Text fontSize={{ base: "10px", md: "xs" }} color="gray.500" lineHeight="tall" display={{ base: "none", md: "block" }}>{product.description}</Text>
+                            <Text fontSize={{ base: "10px", md: "xs" }} color="gray.500" lineHeight="tall" display={{ base: "none", md: "block" }}>{description}</Text>
                         )}
                     </VStack>
                 </VStack>
@@ -197,8 +205,8 @@ const ProductCard = ({ product, setCart }) => {
                                 p={{ base: 6, md: 10 }}
                             >
                                 <Image
-                                    src={images[currentImageIndex] || product.image}
-                                    alt={product.title}
+                                    src={images[currentImageIndex] || product.image || "/placeholder.png"}
+                                    alt={title}
                                     objectFit="contain"
                                     maxH={{ base: "40vh", md: "50vh" }}
                                 />
@@ -213,17 +221,17 @@ const ProductCard = ({ product, setCart }) => {
                                 bg="white"
                             >
                                 <Badge bg="#E0D4EC" color="#121212" px={3} py={1} borderRadius="full" fontSize="xs" letterSpacing="wider">
-                                    {product.category}
+                                    {category}
                                 </Badge>
                                 <Text fontSize={{ base: "xl", md: "3xl" }} fontWeight="800" color="#121212" fontFamily="'Playfair Display', serif" lineHeight="tight">
-                                    {product.title}
+                                    {title}
                                 </Text>
                                 <Text fontWeight="600" fontSize={{ base: "lg", md: "2xl" }} color="gray.600">
-                                    {parseCurrency(product.price)}
+                                    {parseCurrency(price)}
                                 </Text>
                                 
                                 <Text fontSize="sm" color="gray.500" mt={2} noOfLines={4}>
-                                    {product.description}
+                                    {description}
                                 </Text>
 
                                 <Button
@@ -239,7 +247,7 @@ const ProductCard = ({ product, setCart }) => {
                                     _hover={{ backgroundColor: "#333333", transform: "scale(1.02)" }}
                                     onClick={() => {
                                         addToCart(product);
-                                        onClose(); // Cierra el modal después de añadir al carrito
+                                        onClose();
                                     }}
                                 >
                                     Añadir a la bolsa ✦
