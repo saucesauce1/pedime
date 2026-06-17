@@ -14,15 +14,31 @@ import {
     ModalContent,
     ModalBody,
     ModalCloseButton,
-    useDisclosure
+    useDisclosure,
+    useToast // <-- Importamos el sistema de notificaciones
 } from "@chakra-ui/react";
 
 const ProductCard = ({ product, setCart }) => {
     const [show, setShow] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const { isOpen, onOpen, onClose } = useDisclosure(); 
+    const toast = useToast(); // <-- Inicializamos el Toast
 
-    const addToCart = product => setCart(cart => cart.concat(product));
+    const addToCart = product => {
+        setCart(cart => cart.concat(product));
+        
+        // <-- Configuración de la alerta visual elegante
+        toast({
+            title: "Añadido a la bolsa ✦",
+            description: `${product.title} se ha guardado en tu pedido.`,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+            position: "top",
+            variant: "subtle", // Un diseño suave y moderno
+            colorScheme: "green"
+        });
+    };
 
     const handleToggle = useCallback(() => {
         setShow(!show);
@@ -115,7 +131,7 @@ const ProductCard = ({ product, setCart }) => {
                             {product.title}
                         </Text>
 
-                        {product.description.length > 100 ? (
+                        {product.description?.length > 100 ? (
                             <Box w="100%" display={{ base: "none", md: "block" }}>
                                 <Collapse startingHeight={38} in={show}>
                                     <Text fontSize="xs" color="gray.500" lineHeight="tall">{product.description}</Text>
@@ -223,7 +239,7 @@ const ProductCard = ({ product, setCart }) => {
                                     _hover={{ backgroundColor: "#333333", transform: "scale(1.02)" }}
                                     onClick={() => {
                                         addToCart(product);
-                                        onClose();
+                                        onClose(); // Cierra el modal después de añadir al carrito
                                     }}
                                 >
                                     Añadir a la bolsa ✦
