@@ -12,99 +12,145 @@ const Header = () => {
         <>
             <Box
                 w="100%"
-                bg="white"
-                borderRadius="3xl"
-                p={{ base: 6, md: 10 }}
-                boxShadow="0 10px 40px -10px rgba(224, 212, 236, 0.6)"
+                bg="linear-gradient(160deg, #1A1714 0%, #211C18 55%, #1A1714 100%)"
                 mb={12}
-                mt="80px"
-                border="1px solid"
-                borderColor="gray.100"
                 position="relative"
-                fontFamily="'Montserrat', sans-serif" // <-- Fuente inyectada en todo el bloque
+                overflow="hidden"
+                fontFamily="'Montserrat', sans-serif"
+                py={{ base: 16, md: 24 }}
+                px={{ base: 6, md: 10 }}
             >
-                <VStack spacing={{ base: 4, md: 5 }}>
-                    <Box mt="-100px">
+                {/* Textura sutil: rejilla de puntos finos, sugiere tejido sin necesitar foto */}
+                <Box
+                    position="absolute"
+                    inset="0"
+                    opacity={0.5}
+                    bgImage="radial-gradient(circle, rgba(201,168,118,0.18) 1px, transparent 1px)"
+                    bgSize="28px 28px"
+                    pointerEvents="none"
+                />
+
+                <VStack spacing={{ base: 6, md: 7 }} position="relative" zIndex={1} maxW="900px" mx="auto">
+                    <Box>
                         <Image
-                            w="150px"
-                            h="150px"
+                            w={{ base: "84px", md: "100px" }}
+                            h={{ base: "84px", md: "100px" }}
                             objectFit="cover"
                             loading="lazy"
                             borderRadius="full"
                             src="/logo.png"
                             alt="Logo Mystical Style"
-                            border="4px solid white"
-                            boxShadow="md"
-                            bg="white"
+                            border="1px solid"
+                            borderColor="#C9A876"
+                            p="3px"
                         />
                     </Box>
+
+                    <Text
+                        fontSize={{ base: "2xs", md: "xs" }}
+                        fontWeight="600"
+                        color="#C9A876"
+                        letterSpacing="0.35em"
+                        textTransform="uppercase"
+                    >
+                        Boutique de Colección — CDMX
+                    </Text>
 
                     <Heading
                         as={Link}
                         href="/"
-                        color="#121212"
-                        fontSize={{ base: "4xl", md: "5xl" }}
-                        fontWeight="800"
-                        letterSpacing="tight"
+                        color="#F5F0E8"
+                        fontSize={{ base: "5xl", md: "8xl" }}
+                        fontWeight="700"
+                        letterSpacing="-0.01em"
+                        lineHeight="0.95"
                         textAlign="center"
-                        fontFamily="'Playfair Display', serif" // <-- Título con fuente elegante
-                        _hover={{ textDecoration: "none", color: "#E8C872" }}
+                        fontFamily="'Playfair Display', serif"
+                        _hover={{ textDecoration: "none", color: "#C9A876" }}
                         translate="no"
                         className="notranslate"
                     >
                         Mystical Style
                     </Heading>
 
-                    <Divider borderColor="#E0D4EC" borderWidth="1px" w="60%" opacity={0.8} />
+                    {/* Línea de firma: se dibuja al cargar, gesto editorial discreto */}
+                    <Box
+                        as="span"
+                        h="1px"
+                        bg="#C9A876"
+                        w={{ base: "120px", md: "180px" }}
+                        sx={{
+                            animation: "drawLine 1.1s ease-out 0.2s forwards",
+                            transform: "scaleX(0)",
+                            "@keyframes drawLine": {
+                                to: { transform: "scaleX(1)" },
+                            },
+                            "@media (prefers-reduced-motion: reduce)": {
+                                animation: "none",
+                                transform: "scaleX(1)",
+                            },
+                        }}
+                    />
 
-                    <HStack flexWrap="wrap" justify="center" spacing={{ base: 2, md: 5 }} rowGap={2}>
-                        {["Calvin Klein", "Michael Kors", "Tommy Hilfiger", "Karl Lagerfeld", "Guess", "True Religion"].map((brand) => (
-                            <Text
-                                key={brand}
-                                fontSize={{ base: "xs", md: "sm" }}
-                                fontWeight="800"
-                                color="gray.600"
-                                letterSpacing="0.2em"
-                                textTransform="uppercase"
-                                translate="no"
-                                className="notranslate"
-                            >
-                                {brand}
-                            </Text>
+                    <Text
+                        color="#B8AFA3"
+                        fontSize={{ base: "sm", md: "md" }}
+                        fontWeight="400"
+                        letterSpacing="0.02em"
+                        textAlign="center"
+                        maxW="480px"
+                        fontStyle="italic"
+                        fontFamily="'Playfair Display', serif"
+                    >
+                        Piezas originales de marca, seleccionadas pieza por pieza.
+                    </Text>
+
+                    <HStack flexWrap="wrap" justify="center" spacing={{ base: 3, md: 6 }} rowGap={3} pt={2}>
+                        {["Calvin Klein", "Michael Kors", "Tommy Hilfiger", "Karl Lagerfeld", "Guess", "True Religion"].map((brand, i) => (
+                            <HStack key={brand} spacing={{ base: 3, md: 6 }}>
+                                <Text
+                                    fontSize={{ base: "2xs", md: "xs" }}
+                                    fontWeight="600"
+                                    color="#D9CFC2"
+                                    letterSpacing="0.25em"
+                                    textTransform="uppercase"
+                                    translate="no"
+                                    className="notranslate"
+                                >
+                                    {brand}
+                                </Text>
+                                {i < 5 && (
+                                    <Box
+                                        as="span"
+                                        w="3px"
+                                        h="3px"
+                                        borderRadius="full"
+                                        bg="#C9A876"
+                                        display={{ base: "none", md: "block" }}
+                                    />
+                                )}
+                            </HStack>
                         ))}
                     </HStack>
 
-                    <Stack 
+                    <Divider borderColor="rgba(201,168,118,0.25)" borderWidth="1px" w="40%" opacity={0.8} pt={1} />
+
+                    <Stack
                         direction={{ base: "column", md: "row" }}
-                        spacing={{ base: 1, md: 2 }} 
-                        mt={2} 
-                        color="gray.500" 
-                        fontSize={{ base: "xs", md: "sm" }} 
-                        fontWeight="500" 
-                        letterSpacing="wide"
+                        spacing={{ base: 1, md: 3 }}
+                        color="#8A8178"
+                        fontSize={{ base: "2xs", md: "xs" }}
+                        fontWeight="500"
+                        letterSpacing="0.15em"
+                        textTransform="uppercase"
                         align="center"
                     >
                         <Text>Envíos Nacionales Seguros</Text>
-                        <Text aria-hidden="true" display={{ base: "none", md: "block" }}>•</Text>
+                        <Text aria-hidden="true" display={{ base: "none", md: "block" }}>·</Text>
                         <Text>Sede en CDMX</Text>
+                        <Text aria-hidden="true" display={{ base: "none", md: "block" }}>·</Text>
+                        <Text color="#C9A876">Autenticidad Garantizada</Text>
                     </Stack>
-                    
-                    <Box
-                        bg="#F3D8E5"
-                        color="#121212"
-                        px={{ base: 4, md: 8 }}
-                        py={{ base: 2, md: 3 }}
-                        borderRadius={{ base: "xl", md: "full" }}
-                        fontSize={{ base: "xs", md: "sm" }}
-                        fontWeight="600"
-                        mt={{ base: 2, md: 4 }}
-                        letterSpacing="wide"
-                        textAlign="center"
-                        display="inline-block"
-                        w={{ base: "100%", md: "auto" }}
-                    >
-                        ✦ Autenticidad Garantizada — Colección Limitada ✦
-                    </Box>
                 </VStack>
             </Box>
 
